@@ -1,0 +1,10 @@
+10:07:31 **** Build of configuration Debug for project 002_exercise ****
+make -j12 all 
+arm-none-eabi-size  002_exercise.elf 
+   text	   data	    bss	    dec	    hex	filename
+  20656	     28	  80460	 101144	  18b18	002_exercise.elf
+Finished building: default.size.stdout
+ 
+
+10:07:31 Build Finished. 0 errors, 0 warnings. (took 238ms)
+

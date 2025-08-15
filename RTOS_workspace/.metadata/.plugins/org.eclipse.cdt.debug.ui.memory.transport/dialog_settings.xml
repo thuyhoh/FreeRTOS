@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section name="Workbench">
+	<section name="EXPORT_DIALOG">
+		<item key="Start" value="0x200132bc"/>
+		<item key="End" value="0x200142bc"/>
+		<item key="Initial address" value="0x200132bc"/>
+		<item key="File" value="D:\Microcontroller\STM32F40x\STM32F4_RTOS\RTOS_workspace\001_HelloWorld\FreeRTOS_Mem_Dump\001_helloworld_hw21.SVDat"/>
+		<item key="SELECTED_EXPORTER" value="PlainTextExporter"/>
+	</section>
+</section>

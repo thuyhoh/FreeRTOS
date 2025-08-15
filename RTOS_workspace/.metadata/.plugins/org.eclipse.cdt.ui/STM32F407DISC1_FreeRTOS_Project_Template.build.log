@@ -1,0 +1,10 @@
+10:07:42 **** Build of configuration Debug for project STM32F407DISC1_FreeRTOS_Project_Template ****
+make -j12 all 
+arm-none-eabi-size  STM32F407DISC1_FreeRTOS_Project_Template.elf 
+   text	   data	    bss	    dec	    hex	filename
+  25760	    116	  84828	 110704	  1b070	STM32F407DISC1_FreeRTOS_Project_Template.elf
+Finished building: default.size.stdout
+ 
+
+10:07:42 Build Finished. 0 errors, 0 warnings. (took 239ms)
+

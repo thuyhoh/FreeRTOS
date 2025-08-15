@@ -1,0 +1,84 @@
+23:37:41 **** Incremental Build of configuration Debug for project 008_FreeRTOS_QueueManagement ****
+make -j12 all 
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DDEBUG -DSTM32F407xx -c -I"D:/Microcontroller/STM32F40x/STM32F4_RTOS/RTOS_workspace/008_FreeRTOS_QueueManagement/ThirdParty/SEGGER/Config" -I"D:/Microcontroller/STM32F40x/STM32F4_RTOS/RTOS_workspace/008_FreeRTOS_QueueManagement/ThirdParty/SEGGER/SEGGER" -I"D:/Microcontroller/STM32F40x/STM32F4_RTOS/RTOS_workspace/008_FreeRTOS_QueueManagement/ThirdParty/FreeRTOS/include" -I"D:/Microcontroller/STM32F40x/STM32F4_RTOS/RTOS_workspace/008_FreeRTOS_QueueManagement/ThirdParty/FreeRTOS/portable/GCC/ARM_CM4F" -I../Drivers/CMSIS/Include -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Core/Inc -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I"D:/Microcontroller/STM32F40x/STM32F4_RTOS/RTOS_workspace/008_FreeRTOS_QueueManagement/ThirdParty/SEGGER/OS" -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I"D:/Microcontroller/STM32F40x/STM32F4_RTOS/RTOS_workspace/008_FreeRTOS_QueueManagement/ThirdParty/FreeRTOS" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
+../Core/Src/main.c: In function 'main':
+../Core/Src/main.c:130:42: warning: pointer targets in passing argument 2 of 'HAL_UART_Receive_IT' differ in signedness [-Wpointer-sign]
+  130 |         if (HAL_UART_Receive_IT(&huart2, &rdata, 1) != HAL_OK) {
+      |                                          ^~~~~~
+      |                                          |
+      |                                          char *
+In file included from ../Core/Inc/stm32f4xx_hal_conf.h:411,
+                 from ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h:29,
+                 from ../Core/Inc/main.h:31,
+                 from ../Core/Src/main.c:21:
+../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h:748:75: note: expected 'uint8_t *' {aka 'unsigned char *'} but argument is of type 'char *'
+  748 | HAL_StatusTypeDef HAL_UART_Receive_IT(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size);
+      |                                                                  ~~~~~~~~~^~~~~
+../Core/Src/main.c:161:44: warning: pointer targets in passing argument 2 of 'HAL_UART_Transmit' differ in signedness [-Wpointer-sign]
+  161 |                 HAL_UART_Transmit(&huart2, uart_msg, sizeof(uart_msg), HAL_MAX_DELAY);
+      |                                            ^~~~~~~~
+      |                                            |
+      |                                            char *
+../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h:745:79: note: expected 'const uint8_t *' {aka 'const unsigned char *'} but argument is of type 'char *'
+  745 | HAL_StatusTypeDef HAL_UART_Transmit(UART_HandleTypeDef *huart, const uint8_t *pData, uint16_t Size, uint32_t Timeout);
+      |                                                                ~~~~~~~~~~~~~~~^~~~~
+../Core/Src/main.c: In function 'task4_uart_write':
+../Core/Src/main.c:335:44: warning: pointer targets in passing argument 2 of 'HAL_UART_Transmit' differ in signedness [-Wpointer-sign]
+  335 |                 HAL_UART_Transmit(&huart2, buff, sizeof(buff), HAL_MAX_DELAY);
+      |                                            ^~~~
+      |                                            |
+      |                                            char *
+../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h:745:79: note: expected 'const uint8_t *' {aka 'const unsigned char *'} but argument is of type 'char *'
+  745 | HAL_StatusTypeDef HAL_UART_Transmit(UART_HandleTypeDef *huart, const uint8_t *pData, uint16_t Size, uint32_t Timeout);
+      |                                                                ~~~~~~~~~~~~~~~^~~~~
+../Core/Src/main.c: In function 'HAL_UART_RxCpltCallback':
+../Core/Src/main.c:344:42: warning: pointer targets in passing argument 2 of 'HAL_UART_Receive_IT' differ in signedness [-Wpointer-sign]
+  344 |         if (HAL_UART_Receive_IT(&huart2, &rdata, 1) != HAL_OK) {
+      |                                          ^~~~~~
+      |                                          |
+      |                                          char *
+../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h:748:75: note: expected 'uint8_t *' {aka 'unsigned char *'} but argument is of type 'char *'
+  748 | HAL_StatusTypeDef HAL_UART_Receive_IT(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size);
+      |                                                                  ~~~~~~~~~^~~~~
+../Core/Src/main.c:347:18: warning: comparison between pointer and integer
+  347 |         if(rdata == "\r")
+      |                  ^~
+../Core/Src/main.c:347:18: warning: comparison with string literal results in unspecified behavior [-Waddress]
+In file included from ../Core/Src/main.c:28:
+D:/Microcontroller/STM32F40x/STM32F4_RTOS/RTOS_workspace/008_FreeRTOS_QueueManagement/ThirdParty/FreeRTOS/include/task.h:2187:115: warning: passing argument 6 of 'xTaskGenericNotifyFromISR' makes pointer from integer without a cast [-Wint-conversion]
+ 2187 |     xTaskGenericNotifyFromISR( ( xTaskToNotify ), ( tskDEFAULT_INDEX_TO_NOTIFY ), ( ulValue ), ( eAction ), NULL, ( pxHigherPriorityTaskWoken ) )
+      |                                                                                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      |                                                                                                                   |
+      |                                                                                                                   BaseType_t {aka long int}
+../Core/Src/main.c:350:17: note: in expansion of macro 'xTaskNotifyFromISR'
+  350 |                 xTaskNotifyFromISR(task2_handle, 0, eNoAction, pxHigherPriorityTaskWoken);
+      |                 ^~~~~~~~~~~~~~~~~~
+D:/Microcontroller/STM32F40x/STM32F4_RTOS/RTOS_workspace/008_FreeRTOS_QueueManagement/ThirdParty/FreeRTOS/include/task.h:2185:52: note: expected 'BaseType_t *' {aka 'long int *'} but argument is of type 'BaseType_t' {aka 'long int'}
+ 2185 |                                       BaseType_t * pxHigherPriorityTaskWoken ) PRIVILEGED_FUNCTION;
+      |                                       ~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~
+D:/Microcontroller/STM32F40x/STM32F4_RTOS/RTOS_workspace/008_FreeRTOS_QueueManagement/ThirdParty/FreeRTOS/include/task.h:2187:115: warning: passing argument 6 of 'xTaskGenericNotifyFromISR' makes pointer from integer without a cast [-Wint-conversion]
+ 2187 |     xTaskGenericNotifyFromISR( ( xTaskToNotify ), ( tskDEFAULT_INDEX_TO_NOTIFY ), ( ulValue ), ( eAction ), NULL, ( pxHigherPriorityTaskWoken ) )
+      |                                                                                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      |                                                                                                                   |
+      |                                                                                                                   BaseType_t {aka long int}
+../Core/Src/main.c:351:17: note: in expansion of macro 'xTaskNotifyFromISR'
+  351 |                 xTaskNotifyFromISR(task1_handle, 0, eNoAction, pxHigherPriorityTaskWoken);
+      |                 ^~~~~~~~~~~~~~~~~~
+D:/Microcontroller/STM32F40x/STM32F4_RTOS/RTOS_workspace/008_FreeRTOS_QueueManagement/ThirdParty/FreeRTOS/include/task.h:2185:52: note: expected 'BaseType_t *' {aka 'long int *'} but argument is of type 'BaseType_t' {aka 'long int'}
+ 2185 |                                       BaseType_t * pxHigherPriorityTaskWoken ) PRIVILEGED_FUNCTION;
+      |                                       ~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~
+arm-none-eabi-gcc -o "008_FreeRTOS_QueueManagement.elf" @"objects.list"   -mcpu=cortex-m4 -T"D:\Microcontroller\STM32F40x\STM32F4_RTOS\RTOS_workspace\008_FreeRTOS_QueueManagement\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="008_FreeRTOS_QueueManagement.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+C:/ST/STM32CubeIDE_1.17.0/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.12.3.rel1.win32_1.1.0.202410251130/tools/bin/../lib/gcc/arm-none-eabi/12.3.1/../../../../arm-none-eabi/bin/ld.exe: warning: 008_FreeRTOS_QueueManagement.elf has a LOAD segment with RWX permissions
+Finished building target: 008_FreeRTOS_QueueManagement.elf
+ 
+arm-none-eabi-size  008_FreeRTOS_QueueManagement.elf 
+arm-none-eabi-objdump -h -S 008_FreeRTOS_QueueManagement.elf  > "008_FreeRTOS_QueueManagement.list"
+   text	   data	    bss	    dec	    hex	filename
+  33960	    204	  81452	 115616	  1c3a0	008_FreeRTOS_QueueManagement.elf
+Finished building: default.size.stdout
+ 
+Finished building: 008_FreeRTOS_QueueManagement.list
+ 
+
+23:37:42 Build Finished. 0 errors, 9 warnings. (took 795ms)
+

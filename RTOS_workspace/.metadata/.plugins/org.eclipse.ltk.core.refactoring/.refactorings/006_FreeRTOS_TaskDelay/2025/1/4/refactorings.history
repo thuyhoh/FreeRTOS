@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename resource &apos;006_FreeRTOS_TaskDelay/STM32F407DISC1_FreeRTOS_Project_Template.ioc&apos; to &apos;006_FreeRTOS_TaskDelay.ioc&apos;" description="Rename resource &apos;STM32F407DISC1_FreeRTOS_Project_Template.ioc&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="STM32F407DISC1_FreeRTOS_Project_Template.ioc" name="006_FreeRTOS_TaskDelay.ioc" stamp="1737603085475" updateReferences="true"/>
+</session>
