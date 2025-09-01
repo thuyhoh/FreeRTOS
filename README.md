@@ -3,22 +3,22 @@
 - document : 
 - video    : [play list youtube](https://www.youtube.com/playlist?list=PL831drV1RoWvU3AIoOKzeoz9AD625a97V) 
 - Software 
-\- IDE      : [STM32CubeIDE]() | [Keilcv5]() & [STM32CubeMx]()
-\- other    : [SEGGER SystemView]()
+    - IDE      : [STM32CubeIDE]() | [Keilcv5]() & [STM32CubeMx]()
+    - other    : [SEGGER SystemView]()
 - RTOS     : [FreeRTOS]()
 - Board    : STM32F407 Discovery | NUCLEO-F446RE
 
 ## II. Creating FreeRTOS base project for STM32 MCUs
 
 - add FreeRTOS folder into project
-\- in portable folder delete all folders exept GCC and MemMang
+    - in portable folder delete all folders exept GCC and MemMang
 - add Config folder into project
 ![image](./img/Project.png)
 - add Include part 
-\- open Properties(alt+enter) => C/C++ General => Paths and Symbols => add include parth
+    - open Properties(alt+enter) => C/C++ General => Paths and Symbols => add include parth
 ![image](./img/Properties.png)
 - wite "#define configSUPPORT_DYNAMIC_ALLOCATION 1" in main file
-\
+    -
 `` note fix error `` [video](https://www.youtube.com/watch?v=Ksjdh0KAEi0&list=PLxGj5QMILu9GIB2PIgY_8RoRpRPOLvQ3J&index=5)
 
 ## III. Introduction about RTOS 
@@ -29,49 +29,49 @@
 ### 2. Real Time OS
 - Đây là một hệ điều hành được thiết kế đặc biệt để chạy các ứng dụng với thời gian rất chính xác và mức độ tin cậy cao.
 - Để được coi là "thời gian thực", một hệ điều hành phải có thời gian tối đa đã biết cho mỗi hoạt động quan trọng mà nó thực hiện. Một số hoạt động này bao gồm
-\- Xử lý các ngắt và ngoại lệ hệ thống nội bộ \
-\- Xử lý các phần quan trọng \
-\- Cơ chế lập lịch, v.v. 
+    - Xử lý các ngắt và ngoại lệ hệ thống nội bộ 
+    - Xử lý các phần quan trọng 
+    - Cơ chế lập lịch, v.v. 
 
 ### 3. RTOS vs GPOS 
 ![image](./img/RTOS_GPOS.png) 
 #### Task Scheduling 
 - GPOS
-\- Việc lập lịch tác vụ không phải lúc nào cũng dựa trên "mức độ ưu tiên"
-\- GPOS được lập trình để xử lý việc lập lịch theo cách mà nó có thể đạt được thông lượng(Throughput) cao. \
-\- Trong GPOS, trình lập lịch thường sử dụng chính sách công bằng để phân phối luồng và quy trình vào CPU. \
-\- Chính sách như vậy cho phép thông lượng tổng thể cao theo yêu cầu của các ứng dụng máy tính để bàn và máy chủ, nhưng không đảm bảo rằng các luồng hoặc quy trình có mức độ ưu tiên cao, quan trọng về thời gian sẽ thực thi thay vì các luồng có mức độ ưu tiên thấp hơn. 
+    - Việc lập lịch tác vụ không phải lúc nào cũng dựa trên "mức độ ưu tiên"
+    - GPOS được lập trình để xử lý việc lập lịch theo cách mà nó có thể đạt được thông lượng(Throughput) cao. 
+    - Trong GPOS, trình lập lịch thường sử dụng chính sách công bằng để phân phối luồng và quy trình vào CPU. 
+    - Chính sách như vậy cho phép thông lượng tổng thể cao theo yêu cầu của các ứng dụng máy tính để bàn và máy chủ, nhưng không đảm bảo rằng các luồng hoặc quy trình có mức độ ưu tiên cao, quan trọng về thời gian sẽ thực thi thay vì các luồng có mức độ ưu tiên thấp hơn. 
 - RTOS
-\- Hầu hết sử dụng phương pháp lập lịch tác vụ ưu tiên dựa trên mức độ ưu tiên \
-\- Mặt khác trong RTOS, các luồng thực thi theo thứ tự ưu tiên của chúng. Nếu một luồng có mức độ ưu tiên cao sẵn sàng chạy, nó sẽ tiếp quản CPU từ bất kỳ luồng có mức độ ưu tiên thấp nào có thể đang thực thi.  \
-\- Tại đây, một luồng có mức độ ưu tiên cao sẽ được thực thi trên các luồng có mức độ ưu  lên thấp. Tất cả "thực thi luồng có mức độ ưu tiên thấp" sẽ bị tạm dừng. Thực thi luồng có mức độ ưu tiên cao sẽ
+    - Hầu hết sử dụng phương pháp lập lịch tác vụ ưu tiên dựa trên mức độ ưu tiên 
+    - Mặt khác trong RTOS, các luồng thực thi theo thứ tự ưu tiên của chúng. Nếu một luồng có mức độ ưu tiên cao sẵn sàng chạy, nó sẽ tiếp quản CPU từ bất kỳ luồng có mức độ ưu tiên thấp nào có thể đang thực thi.  
+    - Tại đây, một luồng có mức độ ưu tiên cao sẽ được thực thi trên các luồng có mức độ ưu  lên thấp. Tất cả "thực thi luồng có mức độ ưu tiên thấp" sẽ bị tạm dừng. Thực thi luồng có mức độ ưu tiên cao sẽ
 chỉ được ghi đè nếu một yêu cầu đến từ một luồng có mức độ ưu tiên cao hơn.
 - ``note``
-\- Thông lượng có nghĩa là  tổng số quy trình(Process) hoàn tất việc thực thi của chúng trên một đơn vị thời gian
+    - Thông lượng có nghĩa là  tổng số quy trình(Process) hoàn tất việc thực thi của chúng trên một đơn vị thời gian
 - `` summary`` 
-\- Đối với RTOS, việc đạt được khả năng dự đoán hoặc bản chất xác định thời gian quan trọng hơn so với thông lượng 
-\- đối với GPOS, việc đạt được thông lượng cao hơn để thuận tiện cho người dùng quan trọng hơn 
+    - Đối với RTOS, việc đạt được khả năng dự đoán hoặc bản chất xác định thời gian quan trọng hơn so với thông lượng 
+    - đối với GPOS, việc đạt được thông lượng cao hơn để thuận tiện cho người dùng quan trọng hơn 
 
 #### Task Switching Latency
 - Trong Máy tính, Độ trễ(Latency) có nghĩa là Thời gian trôi qua giữa một kích thích và phản ứng với nó.
 - Độ trễ chuyển đổi tác vụ(Task Switching Latency) có nghĩa là khoảng thời gian giữa Sự kích hoạt của một sự kiện và thời điểm mà tác vụ xử lý sự kiện đó được phép chạy trên CPU
-![image](./img/taskSwitchinglatency.png) \
+![image](./img/taskSwitchinglatency.png) 
 ![image](./img/taskSwitchingTime.png)
 
 #### Priority Inversion
 - Hiệu ứng đảo ngược ưu tiên (Priority Inversion) có nghĩa là khi một task vụ đang trong quá trình sử dụng tài nguyên thì một task khác có mức ưu tiên cao hơn truy nhập. Task có mức độ ưu tiên cao hơn không thể thay thế cho task trước đó  
-\- đối với GPOS: Hiệu ứng đảo ngược ưu tiên(Priority Inversion) không đáng kể
-\- đối với RTOS: Hiệu ứng đảo ngược ưu tiên(Priority Inversion) phải được giải quyết
+    - đối với GPOS: Hiệu ứng đảo ngược ưu tiên(Priority Inversion) không đáng kể
+    - đối với RTOS: Hiệu ứng đảo ngược ưu tiên(Priority Inversion) phải được giải quyết
 
 #### Kernel Preemption
 - Quyền ưu tiên(Preemption)
-\- Trong tính toán, quyền ưu tiên là hành động tạm thời xóa tác vụ khỏi trạng thái đang chạy mà không cần sự hợp tác của tác vụ đó
+    - Trong tính toán, quyền ưu tiên là hành động tạm thời xóa tác vụ khỏi trạng thái đang chạy mà không cần sự hợp tác của tác vụ đó
 - Trong RTOS 
-\- các luồng thực thi theo thứ tự ưu tiên của chúng. Nếu một luồng có mức độ ưu tiên cao sẵn sàng để chạy, trong một khoảng thời gian nhỏ và giới hạn, nó sẽ tiếp quản CPU từ bất kỳ luồng có mức độ ưu tiên thấp hơn nào có thể đang thực thi mà chúng ta gọi là quyền ưu tiên.
-\- Tác vụ có mức độ ưu tiên thấp hơn sẽ được thực hiện để rời khỏi CPU, nếu tác vụ có mức độ ưu tiên cao hơn muốn thực thi
-\- Các hoạt động của hạt nhân(Kernel) RTOS có thể được chiếm đoạt trước
+    - các luồng thực thi theo thứ tự ưu tiên của chúng. Nếu một luồng có mức độ ưu tiên cao sẵn sàng để chạy, trong một khoảng thời gian nhỏ và giới hạn, nó sẽ tiếp quản CPU từ bất kỳ luồng có mức độ ưu tiên thấp hơn nào có thể đang thực thi mà chúng ta gọi là quyền ưu tiên.
+    - Tác vụ có mức độ ưu tiên thấp hơn sẽ được thực hiện để rời khỏi CPU, nếu tác vụ có mức độ ưu tiên cao hơn muốn thực thi
+    - Các hoạt động của hạt nhân(Kernel) RTOS có thể được chiếm đoạt trước
 - Đối với GPOS
-\- hạt nhân GPOS không thể được chiếm đoạt trước 
+    - hạt nhân GPOS không thể được chiếm đoạt trước 
 ### 4. Multi-tasking
 ![image](./img/multitasking.png)
 
@@ -142,22 +142,22 @@ void vATaskFuntion(void *arg)
 - Lập lịch ưu tiên dựa trên mức độ ưu tiên
 - Lập lịch hợp tác
 - ``note``
-\- Chính sách lập lịch là thuật toán được trình lập lịch sử dụng để quyết định tác vụ nào sẽ thực hiện tại bất kỳ thời điểm nào.
-\- FreeRTOS hoặc hầu hết các hệ điều hành thời gian thực có khả năng sẽ sử dụng Lập lịch ưu tiên dựa trên mức độ ưu tiên theo mặc định
+    - Chính sách lập lịch là thuật toán được trình lập lịch sử dụng để quyết định tác vụ nào sẽ thực hiện tại bất kỳ thời điểm nào.
+    - FreeRTOS hoặc hầu hết các hệ điều hành thời gian thực có khả năng sẽ sử dụng Lập lịch ưu tiên dựa trên mức độ ưu tiên theo mặc định
 
 ### 3. FreeRTOS Scheduling 
 - Scheduler là một phần của mã hạt nhân(Kernel) chịu trách nhiệm quyết định tác vụ nào sẽ được thực thi tại bất kỳ thời điểm cụ thể nào trên CPU.
 - Chính sách lên lịch là thuật toán được trình lên lịch sử dụng để quyết định tác vụ nào sẽ thực thi tại bất kỳ thời điểm nào.
-- configUSE_PREEMPTION của mục có thể cấu hình freeRTOSConfig.h quyết định chính sách lên lịch trong freeRTOS. \
-\- Nếu configUSE_PREEMPTION = 1, thì chính sách lên lịch sẽ là lập lịch ưu tiên dựa trên mức độ ưu tiên. \
-\- Nếu configUSE_PREEMPTION = 0, thì chính sách lên lịch sẽ là lập lịch hợp tác
+- configUSE_PREEMPTION của mục có thể cấu hình freeRTOSConfig.h quyết định chính sách lên lịch trong freeRTOS. 
+    - Nếu configUSE_PREEMPTION = 1, thì chính sách lên lịch sẽ là lập lịch ưu tiên dựa trên mức độ ưu tiên. 
+    - Nếu configUSE_PREEMPTION = 0, thì chính sách lên lịch sẽ là lập lịch hợp tác
 
 ### 4. FreeRTOS Scheduler Implementation
-- Trong FreeRTOS, mã trình lập lịch thực sự là sự kết hợp của Mã chung FreeRTOS + Mã cụ thể của Kiến trúc \
+- Trong FreeRTOS, mã trình lập lịch thực sự là sự kết hợp của Mã chung FreeRTOS + Mã cụ thể của Kiến trúc 
 ![image](./img/scheduler.png) 
 - Mã cụ thể về kiến ​​trúc chịu trách nhiệm đạt được lập lịch tác vụ.
 - Tất cả các mã và cấu hình cụ thể về kiến ​​trúc đều được triển khai trong port.c và portmacro.h
-Nếu bạn đang sử dụng bộ xử lý ARM Cortex Mx thì bạn sẽ có thể định vị các trình xử lý ngắt bên dưới trong port.c, đây là một phần của triển khai trình lập lịch của freeRTOS \
+Nếu bạn đang sử dụng bộ xử lý ARM Cortex Mx thì bạn sẽ có thể định vị các trình xử lý ngắt bên dưới trong port.c, đây là một phần của triển khai trình lập lịch của freeRTOS 
 ![image](./img/Portc.png)
 - vPortSVCHandler()     : Được sử dụng để khởi chạy tác vụ đầu tiên. Được kích hoạt bởi lệnh SVC
 - vPortSVCHandler()     : Được sử dụng để đạt được ngữ cảnh chuyển đổi giữa các tác vụ Được kích hoạt bằng cách chờ PendSV Ngoại lệ hệ thống của ARM
@@ -178,21 +178,21 @@ void xTaskStartScheduler(void);
 - Điều này được triển khai trong tasks.c của hạt nhân(Kernel) FreeRTOS và được sử dụng để khởi động trình lập lịch RTOS.
 - Hãy nhớ rằng sau khi gọi hàm này, chỉ có mã trình lập lịch được khởi tạo và tất cả các Arch. Các ngắt cụ thể sẽ được kích hoạt.
 - Hàm này cũng tạo tác vụ daemon nhàn rỗi và Timer
-- xTaskStartScheduler() gọi đến xPortStartScheduler() để thực hiện Arch. Các khởi tạo cụ thể như : \
-\- Cấu hình bộ đếm thời gian SysTick để phát hành các ngắt ở tốc độ mong muốn (như được cấu hình trong mục cấu hình configTICK_RATE_HZ trong FreeRTOSConfig.h) \
-\- Cấu hình mức độ ưu tiên cho các ngắt PendSV và Systick. \
-\- Bắt đầu tác vụ đầu tiên bằng cách thực thi lệnh SVC
+- xTaskStartScheduler() gọi đến xPortStartScheduler() để thực hiện Arch. Các khởi tạo cụ thể như : 
+    - Cấu hình bộ đếm thời gian SysTick để phát hành các ngắt ở tốc độ mong muốn (như được cấu hình trong mục cấu hình configTICK_RATE_HZ trong FreeRTOSConfig.h) 
+    - Cấu hình mức độ ưu tiên cho các ngắt PendSV và Systick. 
+    - Bắt đầu tác vụ đầu tiên bằng cách thực thi lệnh SVC
 - Về cơ bản, hàm này kích hoạt trình lập lịch (tức là nhiều ngắt cụ thể của Arch hay còn gọi là ngắt hạt nhân) và không bao giờ trả về.
 
 ## VII. FreeRTOS Kernel interrupts và Scheduling of tasks
 1. FreeRTOS Kernel interrupts 
-- Khi FreeRTOS chạy trên MCU dựa trên Bộ xử lý ARM Cortex Mx, các ngắt dưới đây được sử dụng để triển khai Lên lịch tác vụ.\
-\- Ngắt SVC (trình xử lý SVC sẽ được sử dụng để khởi chạy Tác vụ đầu tiên) \
-\- Ngắt PendSV (trình xử lý PendSV được sử dụng để thực hiện chuyển đổi ngữ cảnh giữa các tác vụ) \
-\- Ngắt SysTick (Trình xử lý SysTick triển khai Quản lý Tick RTOS)
-- ``note`` \ 
-\- Nếu ngắt SysTick được sử dụng cho mục đích khác trong ứng dụng thì có thể sử dụng bất kỳ thiết bị ngoại vi bộ đếm thời gian nào khác có sẵn
-\- Tất cả các ngắt được định cấu hình ở mức ưu tiên ngắt thấp nhất có thể.
+- Khi FreeRTOS chạy trên MCU dựa trên Bộ xử lý ARM Cortex Mx, các ngắt dưới đây được sử dụng để triển khai Lên lịch tác vụ.    -
+    - Ngắt SVC (trình xử lý SVC sẽ được sử dụng để khởi chạy Tác vụ đầu tiên)     -
+    - Ngắt PendSV (trình xử lý PendSV được sử dụng để thực hiện chuyển đổi ngữ cảnh giữa các tác vụ)     -
+    - Ngắt SysTick (Trình xử lý SysTick triển khai Quản lý Tick RTOS)
+- ``note``     - 
+    - Nếu ngắt SysTick được sử dụng cho mục đích khác trong ứng dụng thì có thể sử dụng bất kỳ thiết bị ngoại vi bộ đếm thời gian nào khác có sẵn
+    - Tất cả các ngắt được định cấu hình ở mức ưu tiên ngắt thấp nhất có thể.
 
 ## VIII. RTOS Tick
 ### 1. RTOS Tick
@@ -202,17 +202,17 @@ void xTaskStartScheduler(void);
 - Thay đổi RTOS Tick bằng cách cấu hình configTICK_RATE_HZ trong FreeRTOSConfig.h
 - Biến toàn cục xTickCount, và nó được tăng lên một bất cứ khi nào ngắt tích tắc xảy ra
 
-- RTOS Tick Được sử dụng để chuyển đổi ngữ cảnh sang Nhiệm vụ tiềm năng tiếp theo \
-\- ISR tích tắc chạy
-\- Tất cả các nhiệm vụ trạng thái sẵn sàng được quét
-\- Xác định nhiệm vụ tiềm năng tiếp theo sẽ chạy
-\- Nếu tìm thấy, kích hoạt chuyển đổi ngữ cảnh bằng cách đang chờ ngắt PendSV
-\- Trình xử lý PendSV đảm nhiệm việc chuyển đổi ra khỏi nhiệm vụ cũ và chuyển đổi vào nhiệm vụ mới
+- RTOS Tick Được sử dụng để chuyển đổi ngữ cảnh sang Nhiệm vụ tiềm năng tiếp theo     -
+    - ISR tích tắc chạy
+    - Tất cả các nhiệm vụ trạng thái sẵn sàng được quét
+    - Xác định nhiệm vụ tiềm năng tiếp theo sẽ chạy
+    - Nếu tìm thấy, kích hoạt chuyển đổi ngữ cảnh bằng cách đang chờ ngắt PendSV
+    - Trình xử lý PendSV đảm nhiệm việc chuyển đổi ra khỏi nhiệm vụ cũ và chuyển đổi vào nhiệm vụ mới
 ### 2. Cấu hình RTOS tick timer (SysTick)
 ![imgae](./img/Config_RTOS_Tick_Timer.png)
-- `` Ví dụ `` \
-\- Nếu configCPU_CLK_HZ = 16000000 + configTICK_RATE_HZ = 1000Hz. => portSYSTICK_NVIC_LOAD_REG = (configCPU_CLK_HZ/configTICK_RATE_HZ) -1 = 15999 \
-\- khi bộ đếm(Timer) đếm đến 15999->0 ngắt được tạo ra. Thời gian sảy ra ngắt 1ms
+- `` Ví dụ ``     -
+    - Nếu configCPU_CLK_HZ = 16000000 + configTICK_RATE_HZ = 1000Hz. => portSYSTICK_NVIC_LOAD_REG = (configCPU_CLK_HZ/configTICK_RATE_HZ) -1 = 15999     -
+    - khi bộ đếm(Timer) đếm đến 15999->0 ngắt được tạo ra. Thời gian sảy ra ngắt 1ms
 ## IX. Context Switching 
 ### 1. Context Switching
 - Chuyển đổi ngữ cảnh là quá trình chuyển đổi ra khỏi một tác vụ và chuyển đổi vào một tác vụ khác trên CPU để thực thi.
@@ -224,7 +224,7 @@ void xTaskStartScheduler(void);
 ### 2. Task State 
 Khi một tác vụ thực thi trên Bộ xử lý, nó sử dụng
 - Các thanh ghi lõi của Bộ xử lý.
-- Nếu một Tác vụ muốn thực hiện bất kỳ thao tác đẩy và bật nào (trong khi gọi hàm) thì nó sử dụng bộ nhớ ngăn xếp chuyên dụng của riêng nó \
+- Nếu một Tác vụ muốn thực hiện bất kỳ thao tác đẩy và bật nào (trong khi gọi hàm) thì nó sử dụng bộ nhớ ngăn xếp chuyên dụng của riêng nó     -
 ![image](./img/Task_State.png)
 ### 3. ARM Cortex Mx Core registers 
 ![image](./img/core_reg.png)
@@ -295,10 +295,10 @@ BaseType_t xTaskNotifyWait ( uint32_t ulBitsToClearOnEntry,  uint32_t  ulBitsToC
 
 ### 3. API xTaskNotify() 
 - xTaskNotify() được sử dụng để gửi sự kiện trực tiếp đến và bỏ chặn các tác vụ RTOS tiềm năng, và tùy chọn cập nhật giá trị thông báo của tác vụ nhận theo một trong những cách sau:
-\- Viết một số 32 bit vào giá trị thông báo
-\- Thêm một (tăng) giá trị thông báo
-\- Đặt một hoặc nhiều bit trong giá trị thông báo
-\- Giữ nguyên giá trị thông báo
+    - Viết một số 32 bit vào giá trị thông báo
+    - Thêm một (tăng) giá trị thông báo
+    - Đặt một hoặc nhiều bit trong giá trị thông báo
+    - Giữ nguyên giá trị thông báo
 ``` C
 BaseType_t xTaskNotify( TaskHandle_t  xTaskToNotify, uint32_t  ulValue,  eNotifyAction eAction );
 /*
@@ -323,9 +323,9 @@ void vTaskDelete( xTaskHandle *pxTaskToDelete );
 ## FreeRTOS Hardware Interrupt Configuration Items 
 ### 1. configKERNEL_INTERRUPT_PRIORITY
 - configKERNEL_INTERRUPT_PRIORITY: Mục cấu hình mức độ ưu tiên ngắt hạt nhân và được đặt ở mức độ ưu tiên ngắt thấp nhất có thể.
-\- Systick Interrupt \
-\- PendSV interrupt \
-\- SVC interrupt
+    - Systick Interrupt     -
+    - PendSV interrupt     -
+    - SVC interrupt
 ### 2. configMAX_SYSCALL_INTERRUPT_PRIORITY
 - configMAX_SYSCALL_INTERRUPT_PRIORITY: Mục cấu hình mức độ ưu tiên ngắt hệ thống quyết định mức độ ưu tiên tối đa, và cho phép sử dụng những API freertos kết thúc bằng “FromIsr” trong các quy trình dịch vụ ngắt của chúng.
 - ``note`` : 0 là mức ưu tiên tối đa của Cortex-Mx do dó không thể để những API có mức ưu tiên (Urgency) cao hơn mức ưu tiên được xác định bởi configMAX_SYSCALL_INTERRUPT_PRIORITY Do đó, bất kỳ trình dịch vụ ngắt nào sử dụng hàm API RTOS phải có giá trị ưu tiên được đặt thủ công thành giá trị bằng hoặc lớn hơn giá trị configMAX_SYSCALL_INTERRUPT_PRIORITY thiết lập
@@ -363,14 +363,14 @@ taskYIELD()
 - ``note`` Không bao giờ sử dụng triển khai trễ dựa trên vòng lặp for, điều này làm tiêu tốn CPU mà không thực hiện bất kỳ công việc thực sự nào vẫn sẽ ngăn chặn bất kỳ tác vụ khác
 
 ### 1. API vTaskDelay 
-\- chặn task xTicksToDelay(tick) kể từ lần gọi
+    - chặn task xTicksToDelay(tick) kể từ lần gọi
 ``` c
 void vTaskDelay( const TickType_t xTicksToDelay );
 ```
 ### 2. API xTaskDelayUntil
-\- xTaskDelayUntil tạo ra tần số delay chính sác
-\- API unblock task sau (*pxPreviousWakeTime + xTimeIncrement)
-<!-- \- API có thể trả về ngay lập tức nếu  -->
+    - xTaskDelayUntil tạo ra tần số delay chính sác
+    - API unblock task sau (*pxPreviousWakeTime + xTimeIncrement)
+<!--     - API có thể trả về ngay lập tức nếu  -->
 ``` C
 BaseType_t xTaskDelayUntil( TickType_t * const pxPreviousWakeTime, const TickType_t xTimeIncrement );
 /*
@@ -415,8 +415,8 @@ void vApplicationDaemonTaskStartupHook( void );
 ## Event Group API
 - để có thể sử dụng API này phải cấu hình configSUPPORT_DYNAMIC_ALLOCATION = 1. Include header file
 - configUSE_16_BIT_TICKS là một macro trong file cấu hình FreeRTOSConfig.h của FreeRTOS, được sử dụng để định cấu hình độ dài của kiểu dữ liệu được sử dụng để lưu trữ số lượng tick(flag) của hệ thống.
-\- Nếu configUSE_16_BIT_TICKS được định nghĩa là 1, TickType_t sẽ là kiểu dữ liệu 16-bit (ví dụ: uint16_t).
-\- Nếu configUSE_16_BIT_TICKS được định nghĩa là 0 (hoặc không được định nghĩa), TickType_t sẽ là kiểu dữ liệu 32-bit (ví dụ: uint32_t). 
+    - Nếu configUSE_16_BIT_TICKS được định nghĩa là 1, TickType_t sẽ là kiểu dữ liệu 16-bit (ví dụ: uint16_t).
+    - Nếu configUSE_16_BIT_TICKS được định nghĩa là 0 (hoặc không được định nghĩa), TickType_t sẽ là kiểu dữ liệu 32-bit (ví dụ: uint32_t). 
 ``` C
 /*
     @reval : Nếu nhóm sự kiện đã được tạo thì một xử lý đến nhóm sự kiện sẽ được trả về.
@@ -535,8 +535,8 @@ void *pvTimerGetTimerID( TimerHandle_t xTimer );
 - Semaphore là một cơ chế đồng bộ hóa được sử dụng trong FreeRTOS để điều phối việc truy cập vào tài nguyên dùng chung giữa các task. Semaphore hoạt động như một biến đếm, có thể được tăng hoặc giảm giá trị.
 
 - có 2 loại semaphore : binary semaphore và counting semaphore
-\- Semaphore nhị phân (binary semaphore) : cơ chế giống với mutex Có giá trị là 0 hoặc 1. Thường được dùng để bảo vệ tài nguyên chia sẻ hoặc đồng bộ hóa hai task. \
-\- Semaphore tăng (counting semaphore) : Có giá trị lớn hơn 1. Thường được dùng để quản lý một số lượng tài nguyên có hạn hoặc đếm các sự kiện.
+    - Semaphore nhị phân (binary semaphore) : cơ chế giống với mutex Có giá trị là 0 hoặc 1. Thường được dùng để bảo vệ tài nguyên chia sẻ hoặc đồng bộ hóa hai task.     -
+    - Semaphore tăng (counting semaphore) : Có giá trị lớn hơn 1. Thường được dùng để quản lý một số lượng tài nguyên có hạn hoặc đếm các sự kiện.
 
 ### API
 - tạo Semaphore
