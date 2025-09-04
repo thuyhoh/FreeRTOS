@@ -20,7 +20,7 @@
 ![image](./img/Properties.png)
 - Configura Macros
     - configSUPPORT_DYNAMIC_ALLOCATION 1
-`` note fix error: `` [video](https://www.youtube.com/watch?v=Ksjdh0KAEi0&list=PLxGj5QMILu9GIB2PIgY_8RoRpRPOLvQ3J&index=5)
+- `` note fix error: `` [video](https://www.youtube.com/watch?v=Ksjdh0KAEi0&list=PLxGj5QMILu9GIB2PIgY_8RoRpRPOLvQ3J&index=5)
 
 ## III. Introduction
 ### 1. Real Time Applications (RTAs)
@@ -87,36 +87,34 @@ chỉ được ghi đè nếu một yêu cầu đến từ một luồng có m�
 ![image](./img/taskstate.png)
 
 ### 2. Mức độ ưu tiên của task
-#### 2.1. Sự khác nhau định nghĩa mức độ ưu tiên giữa FreeRTOS và Core
 - Processor Interrupt/Exception Priority : giá trị càng thấp thì các ngắt mức độ ưu tiên càng cao và ngược lại
 - FreeRTOS Task Priority : giá trị ưu tiên càng cao thì Task có mức ưu tiên càng cao tương ứng
 
 ![image](./img/taskPriority_1.png)
-#### 2.2  FreeRTOS Task Priority APIs
-- Cáu hình mức độ ưu tiên cho task
+#### 2.2. Task Priority APIs
+##### vTaskPrioritySet
 ``` c
 void vTaskPrioritySet( xTaskHandle pxTask, unsigned portBASE_TYPE  uxNewPriority );
 ```
-- Lấy giá trị ưu tiên của Task
+##### uxTaskPriorityGet
 ``` c
 unsigned portBASE_TYPE uxTaskPriorityGet( xTaskHandle  pxTask );
 ```
 
-## 3. Idle Task 
+### 3. Idle Task 
 ![imgae](./img/Idle_Task.png)
 - Idle Task được tự động tạo ra khi trình lập lịch RTOS được khởi động để đảm bảo luôn có ít nhất một nhiệm vụ có thể chạy.
 - Task này được tạo ở mức ưu tiên thấp nhất đảm bảo không sử dụng bất kỳ tài nguyên CPU nào. Nhường CPU cho các task có mức ưu tiên cao hơn ở trạng thái sẵn sàng.
 - Idle Task có trách nhiệm giải phóng bộ nhớ được RTOS phân bổ cho các Task đã bị xóa
 - Có thể cung cấp một hàm Hook ứng dụng trong tác vụ nhàn rỗi để đưa CPU đến chế độ năng lượng thấp khi không có tác vụ hữu ích nào đang thực thi.
 
-## 4. FreeRTOS Timer Services Task (Timer Daemon Task)
+### 4. FreeRTOS Timer Services Task (Timer Daemon Task)
 - Xuất hiện khi sử dụng software timers
 - Tác vụ này được tạo tự động khi trình lập lịch được khởi động và Macro `configUSE_TIMERS` 1 
 - đươc RTOS sử dụng để quản lý software timers FreeRTOS và gọi các Callback của software timers tương ứng đã đăng ký.
 
 ### 5. Task APIs
-#### 5.1. API xTaskCreate
-- API
+#### 1. xTaskCreate
 ``` C
 BaseType_t xTaskCreate( TaskFunction_t vATaskFuntion,
                         const char * const pcName,
@@ -141,7 +139,7 @@ BaseType_t xTaskCreate( TaskFunction_t vATaskFuntion,
 ![imgae](./img/happenCreatetask.png)
 
 
-### 5.2. API vTaskDelete
+#### 2. vTaskDelete
 
 ``` C
 void vTaskDelete( xTaskHandle *pxTaskToDelete );
@@ -150,7 +148,7 @@ void vTaskDelete( xTaskHandle *pxTaskToDelete );
 */
 ```
 
-#### 5.3. Task Implementation Function
+#### 3. Task Implementation Function
 ``` C
 void vATaskFuntion(void *arg)
 {
@@ -163,9 +161,7 @@ void vATaskFuntion(void *arg)
 }
 ```
 
-
-
-## VI. Task Scheduling 
+## V. Task Scheduling 
 ### 1. Trình lập lịch (Scheduler)
 - Scheduler là một phần của mã hạt nhân(Kernel) chịu trách nhiệm quyết định tác vụ nào sẽ được thực thi tại bất kỳ thời điểm cụ thể nào trên CPU.
 - Công việc cơ bản của trình lập lịch là xác định tác vụ tiềm năng tiếp theo sẽ chạy trên CPU
@@ -192,15 +188,15 @@ void xTaskStartScheduler(void);
     - Cấu hình mức độ ưu tiên cho các ngắt PendSV và Systick. 
     - Thực thi lệnh SVC để chạy task đầu tiên.    
 
-## VII. Task delay
+## VI. Task delay
 - ``note`` Không bao giờ sử dụng triển khai trễ dựa trên vòng lặp for, điều này làm tiêu tốn CPU mà không thực hiện bất kỳ công việc thực sự nào vẫn sẽ ngăn chặn bất kỳ tác vụ khác
-
-### 1. API vTaskDelay 
+### APIs
+#### 1. vTaskDelay 
 - chặn task xTicksToDelay(tick) kể từ lần gọi
 ``` c
 void vTaskDelay( const TickType_t xTicksToDelay );
 ```
-### 2. API xTaskDelayUntil
+#### 2. xTaskDelayUntil
     - xTaskDelayUntil tạo ra tần số delay chính sác
     - API unblock task sau (*pxPreviousWakeTime + xTimeIncrement)
 <!--     - API có thể trả về ngay lập tức nếu  -->
@@ -215,22 +211,7 @@ BaseType_t xTaskDelayUntil( TickType_t * const pxPreviousWakeTime, const TickTyp
 ```
 - `` note ``: chuyển đổi ms->tick: tick = ms/portTICK_PERIOD_MS
 
-### 1. RTOS Tick
-![image](./img/RTOS_Tick.png)
-- RTOS Tick dùng để theo dõi thời gian đã trôi qua
-- Cấu hình configTICK_RATE_HZ trong FreeRTOSConfig.h     
-    - ``ví dụ:`` Nếu configCPU_CLK_HZ = 16000000 + configTICK_RATE_HZ = 1000Hz. => portSYSTICK_NVIC_LOAD_REG = (configCPU_CLK_HZ/configTICK_RATE_HZ) -1 = 15999     
-    - => khi bộ đếm(Timer) đếm đến 15999->0 ngắt SysTick được tạo ra. Thời gian sảy ra ngắt 1ms
-- Biến toàn cục xTickCount, và nó được tăng lên một bất cứ khi nào ngắt SysTick xảy ra
-
-- RTOS Tick Được sử dụng để chuyển đổi ngữ cảnh sang Nhiệm vụ tiềm năng tiếp theo     
-    - ISR tích tắc chạy
-    - Tất cả các nhiệm vụ trạng thái sẵn sàng được quét
-    - Xác định nhiệm vụ tiềm năng tiếp theo sẽ chạy
-    - Nếu tìm thấy, kích hoạt chuyển đổi ngữ cảnh bằng cách đang chờ ngắt PendSV
-    - Trình xử lý PendSV đảm nhiệm việc chuyển đổi ra khỏi nhiệm vụ cũ và chuyển đổi vào nhiệm vụ mới
-
-## VIII. Context Switching 
+## VII. Context Switching 
 ### 1. Context Switching
 - Chuyển đổi ngữ cảnh (Context Switching) là quá trình chuyển đổi từ tác vụ sang một tác vụ khác trên CPU để thực thi.
 - Trong RTOS, Chuyển đổi ngữ cảnh được xử lý bởi Trình lập lịch.
@@ -298,13 +279,13 @@ thoát ngoại lệ
 3. Exception Exit 
 ![image](./img/Exception_Exit.png)
 
-## IX cơ chế trao đổi và đồng bộ 
-## 1. Task Notification
+## VIII. cơ chế đồng bộ và chia sẻ dữ liệu
+### 1. Task Notification
 - Task Notification là một cơ chế rất nhẹ và hiệu quả để giao tiếp hoặc đồng bộ giữa Task-Task hoặc IRS-Task. 
 - Mỗi tác vụ RTOS có 32 bit giá trị thông báo và được khởi tạo thành 0 khi tác vụ RTOS được tạo
 - có 2 quá trình chính: thông báo(Notify) và chờ(wait)
-### APIs
-#### 1. xTaskNotifyWait
+#### APIs
+##### 1. xTaskNotifyWait
 - Khi tác vụ gọi đên xTaskNotifyWait(), thì nó sẽ đợi(block) cho đến khi hết thời gian chờ(xTicksToWait) hoặc nhận được thông báo từ ISR hoặc tác vụ khác
 ``` c
 BaseType_t xTaskNotifyWait ( uint32_t ulBitsToClearOnEntry,  uint32_t  ulBitsToClearOnExit, uint32_t  *pulNotificationValue,  TickType_t  xTicksToWait ); 
@@ -319,7 +300,7 @@ BaseType_t xTaskNotifyWait ( uint32_t ulBitsToClearOnEntry,  uint32_t  ulBitsToC
 */
 ```
 
-### 2. API xTaskNotify() 
+##### 2. xTaskNotify() 
 - xTaskNotify() được sử dụng để gửi sự kiện trực tiếp đến và bỏ chặn các tác vụ RTOS tiềm năng, tùy chọn cập nhật giá trị thông báo của tác vụ nhận theo một trong những cách sau:
     - Viết một số 32 bit vào giá trị thông báo
     - Thêm một (tăng) giá trị thông báo
@@ -339,14 +320,14 @@ BaseType_t xTaskNotify( TaskHandle_t  xTaskToNotify, uint32_t  ulValue,  eNotify
 */
 ```
 
-## 2. Event Group 
+### 2. Event Group 
 - Event Group(Event Flags) là một cơ chế đồng bộ hóa giữa các Task hoặc giữa Task và ISR. Nó cho phép nhiều Task chờ (wait) cùng một hoặc nhiều sự kiện xảy ra.
 - configUSE_16_BIT_TICKS là một macro được sử dụng để định cấu hình độ dài của kiểu dữ liệu được sử dụng để lưu trữ số lượng tick(flag) của hệ thống.
     - Nếu configUSE_16_BIT_TICKS 1, TickType_t <=> 16-bit .
     - Nếu configUSE_16_BIT_TICKS 0 , TickType_t <=> 32-bit 
 
-### APIs
-#### 1. xEventGroupCreate
+#### APIs
+##### 1. xEventGroupCreate
 ``` C
 /**
  * @brief: Cấp phát động Event Group 
@@ -359,27 +340,21 @@ EventGroupHandle_t xEventGroupCreate( void );
 */
 EventGroupHandle_t xEventGroupCreateStatic( StaticEventGroup_t *pxEventGroupBuffer );
 ```
-#### 2. xEventGroupWaitBits
+##### 2. xEventGroupWaitBits
 ``` C
-/*
-    @param[xEventGroup]
-    @param[uxBitsToWaitFor]: các bit mà Task muốn chờ.
-    @param[xClearOnExit]: nếu pdTRUE, thì bit sẽ bị xóa sau khi Task thoát khỏi chờ.
-    @param[xWaitForAllBits]:
+/**
+ * @param[xEventGroup]
+ * @param[uxBitsToWaitFor]: các bit mà Task muốn chờ.
+ * @param[xClearOnExit]: nếu pdTRUE, thì bit sẽ bị xóa sau khi Task thoát khỏi chờ.
+ * @param[xWaitForAllBits]:
         - pdTRUE: Task chỉ tiếp tục khi tất cả bit trong uxBitsToWaitFor được set.
         - pdFALSE: Task tiếp tục khi bất kỳ bit nào được set.
-    @param[xTicksToWait]: thời gian timeout
-    
-    @retval
+ * @param[xTicksToWait]: thời gian timeout
+ * @retval:
 */
-EventBits_t xEventGroupWaitBits(
-                      const EventGroupHandle_t xEventGroup,
-                      const EventBits_t uxBitsToWaitFor,
-                      const BaseType_t xClearOnExit,
-                      const BaseType_t xWaitForAllBits,
-                      TickType_t xTicksToWait );
+EventBits_t xEventGroupWaitBits( const EventGroupHandle_t xEventGroup, const EventBits_t uxBitsToWaitFor, const BaseType_t xClearOnExit, const BaseType_t xWaitForAllBits, TickType_t xTicksToWait );
 ```
-#### 3. xEventGroupSetBits
+##### 3. xEventGroupSetBits
 ``` C
 /**
  * @retval: toàn bộ trạng thái bit hiện tại của Event Group sau khi set.
@@ -389,15 +364,13 @@ EventBits_t xEventGroupSetBits( EventGroupHandle_t xEventGroup, const EventBits_
 /**
  * @brief: sử dụng khi giao tiếp ISR và Task
 */
-BaseType_t xEventGroupSetBitsFromISR(
-                         EventGroupHandle_t xEventGroup,
-                         const EventBits_t uxBitsToSet,
-                         BaseType_t *pxHigherPriorityTaskWoken );
+BaseType_t xEventGroupSetBitsFromISR(EventGroupHandle_t xEventGroup, const EventBits_t uxBitsToSet, BaseType_t *pxHigherPriorityTaskWoken);
 ```
 
-## 3. Mutual exculsion
+### 3. Mutual exculsion
 - nó cho phép chỉ một luồng duy nhất có thể truy cập vào tài nguyên được chia sẻ(shared resource) tại một thời điểm. Điều này tránh được tình trạng xung đột giữa các luồng khi sử dụng tài nguyên chung. Thông thường, phải khóa tài nguyên đó trước khi sử dụng và
 mở khóa sau khi bạn hoàn tất việc truy cập tài nguyên.
+#### APIs
 ``` C
 pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER; // Cấp phát tĩnh
 int pthread_mutex_init(pthread_mutex_t *mutex, const pthread_mutexattr_t *atrr); // cấp phát động note khi không dùng dến phải có quá trình huỷ bỏ (pthread_mutex_destroy)
@@ -417,40 +390,39 @@ void task1(void)
 
 ```
 
-## 4. Semaphore
-### giới thiệu về Semaphore
+### 4. Semaphore
 - Semaphore là một cơ chế đồng bộ hóa quan trọng để điều phối việc truy cập vào tài nguyên dùng chung giữa các task. Semaphore hoạt động như một biến đếm, có thể được tăng hoặc giảm giá trị.
 
 - có 2 loại semaphore : binary semaphore và counting semaphore
     - Semaphore nhị phân (binary semaphore) : cơ chế giống với mutex Có giá trị là 0 hoặc 1. Thường được dùng để bảo vệ tài nguyên chia sẻ hoặc đồng bộ hóa hai task.     -
     - Semaphore tăng (counting semaphore) : Có giá trị lớn hơn 1. Thường được dùng để quản lý một số lượng tài nguyên có hạn hoặc đếm các sự kiện.
 
-### APIs
-#### 1. xSemaphoreCreate
+#### Semaphore APIs
+##### 1. xSemaphoreCreate
 ``` C
 // binary semaphore
-SemaphoreHandle_t xSemaphoreCreateBinary( void );
+SemaphoreHandle_t xSemaphoreCreateBinary(void);
 // counting semaphore
-SemaphoreHandle_t xSemaphoreCreateCounting( void ):
+SemaphoreHandle_t xSemaphoreCreateCounting(void):
 // Mutex
-SemaphoreHandle_t xSemaphoreCreateMutex( void )
+SemaphoreHandle_t xSemaphoreCreateMutex(void);
 
 ```
-#### 2. xSemaphoreTake
+##### 2. xSemaphoreTake
 ``` C
 /*
     @brief: Yêu cầu một semaphore. Nếu semaphore không có sẵn, task sẽ bị block cho đến khi semaphore có sẵn
     @param[xBlockTime] : thời gian tối đa treo task
 */
 BaseType_t xSemaphoreTake(  xSemaphoreHandle xSemaphore, 
-                            TickType_t xBlockTime   );
+                            TickType_t xBlockTime );
 
 /**
  * 
 */
 BaseType_t xSemaphoreTakeISR();
 ```
-#### 3. xSemaphoreGive
+##### 3. xSemaphoreGive
 ``` C
 /*
     @brief: Trả lại một semaphore.
@@ -459,16 +431,15 @@ BaseType_t xSemaphoreGive(xSemaphoreHandle xSemaphore);
 
 /**
  * 
- * 
 */
 BaseType_t xSemaphoreGiveFromISR()
 ```
-#### 4. Xóa semaphore
+##### 4. vSemaphoreDelete
 ``` C
 void vSemaphoreDelete( SemaphoreHandle_t xSemaphore );
 ```
 
-## 5. Queue
+### 5. Queue
 - Queue (hàng đợi) là cơ chế giao tiếp và đồng bộ Task-Task hoặc ISR-Task trong FreeRTOS dùng để:
     - Trao đổi dữ liệu giữa các Task.
     - Truyền dữ liệu từ ISR sang Task hoặc ngược lại.
@@ -476,97 +447,107 @@ void vSemaphoreDelete( SemaphoreHandle_t xSemaphore );
     - Mỗi lần send sẽ đưa một bản sao dữ liệu vào Queue.
     - Mỗi lần receive sẽ lấy ra phần tử đầu tiên và xóa khỏi Queue
 
-### Queue APIs
-#### 1. xQueueCreate
+#### Queue APIs
+##### 1. xQueueCreate
 ``` C
 QueueHandle_t xQueueGenericCreate( const UBaseType_t uxQueueLength,
                                        const UBaseType_t uxItemSize,
                                        const uint8_t ucQueueType );
 ```
 
-#### 2. xQueueSend
+##### 2. xQueueSend
 ``` C
 BaseType_t xQueueSend( QueueHandle_t xQueue, const void * pvItemToQueue, TickType_t xTicksToWait );
 BaseType_t xQueueSendToFront( QueueHandle_t xQueue, const void * pvItemToQueue, TickType_t xTicksToWait );
 BaseType_t xQueueSendFromISR( QueueHandle_t xQueue, const void * pvItemToQueue, BaseType_t *pxHigherPriorityTaskWoken );
 ```
-#### 3. xQueueReceive
+##### 3. xQueueReceive
 ``` C
 BaseType_t xQueueReceive( QueueHandle_t xQueue, void *pvBuffer, TickType_t xTicksToWait );
 BaseType_t xQueueReceiveFromISR( QueueHandle_t xQueue, void *pvBuffer, BaseType_t *pxHigherPriorityTaskWoken );
-
 ```
 
 ## X. Interrupt Safe and Interrupt Un-Safe 
-## Thực hiện 
 - Bất cứ khi chương trình thực hiện ngắt phải sử dụng FreeRTOS API có kết thúc bằng từ “FromISR”(Queue_write/Queue_write_FromISR, ...)
 - ``note`` : Điều này là do, Khi ở trong Contex ngắt (tức là đang ở giữa việc phục vụ ISR - handler mode), không thể quay lại Bối cảnh tác vụ (tức là tạo tác vụ để chạy bằng cách chiếm trước ISR - thread mode)
 - configMAX_SYSCALL_INTERRUPT_PRIORITY: Mục cấu hình mức độ ưu tiên ngắt hệ thống quyết định mức độ ưu tiên tối đa, và cho phép sử dụng những API freertos kết thúc bằng “FromIsr” trong các quy trình dịch vụ ngắt của chúng.
 - ``note`` : bất kỳ trình dịch vụ ngắt nào sử dụng API RTOS phải có giá trị ưu tiên được đặt thủ công bằng hoặc lớn hơn giá trị configMAX_SYSCALL_INTERRUPT_PRIORITY được thiết lập
 
-
-
-
 ## XI. FreeRTOS HOOK funtion
+- HOOK funtion là những hàm đặc biệt mà người dùng tự định nghĩa để OS tự động gọi tại một số sự kiện quan trọng.
 ### 1. Idle task HOOK function 
-- Nhiệm vụ nhàn rỗi chạy ở mức ưu tiên thấp nhất, do đó hàm idle hook như vậy sẽ chỉ được thực thi khi không có nhiệm vụ nào có mức ưu tiên cao hơn có thể chạy. Điều này khiến hàm vApplicationIdleHook() trở thành nơi lý tưởng để đưa bộ xử lý vào trạng thái năng lượng thấp - cung cấp khả năng tiết kiệm năng lượng tự động bất cứ khi nào không có quá trình xử lý nào được thực hiện.
-- đặt configUSE_IDLE_HOOK thành 1 trong FreeRTOSConfig.h có thể triển khai vApplicationIdleHook
+- vApplicationIdleHook được thực thi trong Idle Task có thể kết đưa bộ xử lý vào trạng thái năng lượng thấp hoặc thực hiện công việc nền khi CPU rảnh.
+- Cấu hình configUSE_IDLE_HOOK đặt thành 1 dể triển khai vApplicationIdleHook
 ``` C
-void vApplicationIdleHook( void );
+void vApplicationIdleHook(void);
 ```
 ### 2. RTOS tick HOOK function 
-- Hook tick cung cấp một vị trí thuận tiện để triển khai chức năng hẹn giờ.
+- vApplicationTickHook được gọi ở mỗi SysTick interrupt, dùng cho các tác vụ định kỳ rất ngắn gọn.
 
-- đăt configUSE_TICK_HOOK được đặt thành 1 trong FreeRTOSConfig.h có thể triển khai:
+- Cáu hình configUSE_TICK_HOOK được đặt thành 1 triển khai vApplicationTickHook
 ``` C
-void vApplicationTickHook( void );
+void vApplicationTickHook(void);
 ```
 ### 3. Malloc failed HOOK function
-- Các lược đồ phân bổ bộ nhớ được triển khai bởi heap_1.c, heap_2.c, heap_3.c, heap_4.c và heap_5.c có thể tùy chọn bao gồm hàm malloc() failure hook (hoặc callback) có thể được cấu hình để được gọi nếu pvPortMalloc() trả về NULL.
 
-- Việc định nghĩa malloc() failure hook sẽ giúp xác định các vấn đề do thiếu bộ nhớ heap - đặc biệt là khi lệnh gọi đến pvPortMalloc() không thành công trong một hàm API.
-
-- malloc failed hook sẽ chỉ được gọi nếu configUSE_MALLOC_FAILED_HOOK được đặt thành 1 trong FreeRTOSConfig.h.
+- vApplicationMallocFailedHook Được gọi khi pvPortMalloc() không cấp phát được bộ nhớ (RAM hết) hoặc dùng để báo lỗi hoặc reset hệ thống.
+- Cấu hình configUSE_MALLOC_FAILED_HOOK đặt thành 1 để triển khai vApplicationMallocFailedHook.
 ``` C
 void vApplicationMallocFailedHook( void );
 ```
 ### 4. Stack over flow HOOK function 
-- configUSE_DAEMON_TASK_STARTUP_HOOK được đặt thành 1.
+- vApplicationDaemonTaskStartupHook Được gọi khi FreeRTOS phát hiện tràn stack của một Task hoặc dùng để log lỗi, dừng hệ thống hoặc reset.
+- Cấu hình configUSE_DAEMON_TASK_STARTUP_HOOK được đặt thành 1 để triên khai vApplicationDaemonTaskStartupHook.
 ``` C
 void vApplicationDaemonTaskStartupHook( void );
 ```
-
-
-
-
-
 ## XII. Software Timer
-### giới thiệu về Software Timer
+- Software Timer trong FreeRTOS là timer chạy trên phần mềm (khác với hardware timer chạy trực tiếp trên phần cứng MCU).
+- Nó dùng RTOS Tick interrupt (ngắt SysTick hoặc timer phần cứng mà FreeRTOS sử dụng) để đếm thời gian.
+- Khi timer hết hạn (expire), một callback function do bạn định nghĩa sẽ được gọi.
+### 1. RTOS Tick
+![image](./img/RTOS_Tick.png)
+- RTOS Tick dùng để theo dõi thời gian đã trôi qua
+- Cấu hình configTICK_RATE_HZ trong FreeRTOSConfig.h     
+    - ``ví dụ:`` Nếu configCPU_CLK_HZ = 16000000 + configTICK_RATE_HZ = 1000Hz. => portSYSTICK_NVIC_LOAD_REG = (configCPU_CLK_HZ/configTICK_RATE_HZ) -1 = 15999     
+    - => khi bộ đếm(Timer) đếm đến 15999->0 ngắt SysTick được tạo ra. Thời gian sảy ra ngắt 1ms
+- Biến toàn cục xTickCount, và nó được tăng lên một bất cứ khi nào ngắt SysTick xảy ra
 
-### API
+- RTOS Tick Được sử dụng để chuyển đổi ngữ cảnh sang Nhiệm vụ tiềm năng tiếp theo     
+    - ISR tích tắc chạy
+    - Tất cả các nhiệm vụ trạng thái sẵn sàng được quét
+    - Xác định nhiệm vụ tiềm năng tiếp theo sẽ chạy
+    - Nếu tìm thấy, kích hoạt chuyển đổi ngữ cảnh bằng cách đang chờ ngắt PendSV
+    - Trình xử lý PendSV đảm nhiệm việc chuyển đổi ra khỏi nhiệm vụ cũ và chuyển đổi vào nhiệm vụ mới
+
+### APIs
+#### 1. xTimerCreate
 ``` C
 /*
     @brief: khi RTOS_Tick đếm đến xTimerPeriod thì thực thi pxCallbackFunction
-
 */
 TimerHandle_t xTimerCreate( const char * const pcTimerName,
                             const TickType_t xTimerPeriod,
                             const UBaseType_t uxAutoReload,
                             void * const pvTimerID,
                             TimerCallbackFunction_t pxCallbackFunction );
-
+```
+#### 2. Callback function implement
+``` C
 void pxCallbackFunction( TimerHandle_t xTimer )
 {
     // code
 }
-
 ```
+#### 4. xTimerStart
 ``` C
 BaseType_t xTimerStart( TimerHandle_t xTimer, TickType_t xBlockTime );
 ```
+#### 5. xTimerStop
 ``` C
 BaseType_t xTimerStop( TimerHandle_t xTimer, TickType_t xBlockTime );
 ```
+#### 6. pvTimerGetTimerID
 ``` C
 void *pvTimerGetTimerID( TimerHandle_t xTimer );
 ```
