@@ -91,6 +91,8 @@ chỉ được ghi đè nếu một yêu cầu đến từ một luồng có m�
 - FreeRTOS Task Priority : giá trị ưu tiên càng cao thì Task có mức ưu tiên càng cao tương ứng
 
 ![image](./img/taskPriority_1.png)
+
+- Macro ``configMAX_PRIORITIES`` cấu hình số mức ưu tiên có thể có.
 #### 2.2. Task Priority APIs
 ##### vTaskPrioritySet
 ``` c
@@ -138,9 +140,7 @@ BaseType_t xTaskCreate( TaskFunction_t vATaskFuntion,
 
 ![imgae](./img/happenCreatetask.png)
 
-
 #### 2. vTaskDelete
-
 ``` C
 void vTaskDelete( xTaskHandle *pxTaskToDelete );
 /*
@@ -215,11 +215,15 @@ BaseType_t xTaskDelayUntil( TickType_t * const pxPreviousWakeTime, const TickTyp
 ### 1. Context Switching
 - Chuyển đổi ngữ cảnh (Context Switching) là quá trình chuyển đổi từ tác vụ sang một tác vụ khác trên CPU để thực thi.
 - Trong RTOS, Chuyển đổi ngữ cảnh được xử lý bởi Trình lập lịch.
-
-- Nếu trình lập lịch là trình lập lịch ưu tiên dựa trên mức độ ưu tiên, thì đối với mỗi lần chuyển đổi, trình lập lịch sẽ so sánh mức độ ưu tiên của tác vụ đang chạy với mức độ ưu tiên của danh sách các tác vụ đã sẵn sàng. Nếu có bất kỳ tác vụ đã sẵn sàng nào có mức độ ưu tiên cao hơn tác vụ đang chạy thì chuyển đổi ngữ cảnh sẽ xảy ra.
-- Trên FreeRTOS, Có thể kích hoạt chuyển đổi ngữ cảnh theo cách thủ công bằng cách sử dụng macro ``taskYIELD()``
-- Chuyển đổi ngữ cảnh cũng xảy ra ngay lập tức bất cứ khi nào tác vụ mới bỏ chặn và nếu mức độ ưu tiên của nó cao hơn tác vụ đang chạy hiện tại.
-### 2. Task State 
+### 2. Nguyên nhân sảy ra quá trình chuyển đổi ngữ cảnh
+- **Task cao hơn sẵn sàng chạy**
+    - ``Ví dụ``: Một task có ưu tiên cao bị chặn (blocked) trong khi chờ semaphore, và khi semaphore được “release”, task này trở thành ready, hệ thống sẽ chuyển sang nó ngay lập tức.
+- **Tick interrupt**
+    - Mỗi "tick" của hệ thống có thể kích hoạt scheduler để xem có task nào khác đủ điều kiện chạy không.
+- **Task đang chạy thị bị block/delay**
+    - Nếu một task gọi vTaskDelay(), xQueueReceive(), ... thì task đó sẽ bị chuyển sang trạng thái blocked, CPU nhường lại cho task khác.
+- **Chuyển ngữ cảnh thủ công** 
+    - thông qua taskYIELD() hoặc portYIELD_FROM_ISR() 
 
 ### 3. ARM Cortex Mx Core registers 
 ![image](./img/core_reg.png)
@@ -230,11 +234,11 @@ BaseType_t xTaskDelayUntil( TickType_t * const pxPreviousWakeTime, const TickTyp
     - Task's Stack: chứa thông tin của task đó nằm trong heap section
 ### 5. Quá trình tạo task
 ![image](./img/Task_Create_mem.png)
-- TCB sẽ được khởi tạo trong RAM(Heap section)
-- Bộ nhớ Stack chuyên dụng sẽ được khởi tạo cho một tác vụ. Bộ nhớ stack này sẽ được theo dõi bằng thanh ghi PSP.
+- TCB(Task control block) sẽ được khởi tạo trong RAM(Heap section)
+- Bộ nhớ Stack chuyên dụng sẽ được khởi tạo cho một tác vụ. Bộ nhớ stack này sẽ được theo dõi bằng thanh ghi PSP(Person Stack Pointer).
 - Task sẽ được đưa vào danh sách Sẵn sàng để người lập lịch chọn
 
-### 6. Kernel interrupt tham gia vào quá trình chuyển đổi ngữ cảnh
+### 6. Kernel Interrupt tham gia vào việc triển khai tác vụ
 - Khi FreeRTOS chạy trên MCU dựa trên Bộ xử lý ARM Cortex Mx, các ngắt dưới đây được sử dụng để triển khai Lên lịch tác vụ.    
     - Ngắt SVC - vPortSVCHandler(): được sử dụng để khởi chạy Tác vụ đầu tiên
     - Ngắt PendSV - vPortPendSVHandler(): thực hiện chuyển đổi ngữ cảnh giữa các tác vụ
@@ -243,42 +247,12 @@ BaseType_t xTaskDelayUntil( TickType_t * const pxPreviousWakeTime, const TickTyp
     - Tất cả các ngắt được định cấu hình ở mức ưu tiên ngắt thấp nhất có thể.
 - configKERNEL_INTERRUPT_PRIORITY: cấu hình mức độ ưu tiên ngắt hạt nhân và được đặt ở mức độ ưu tiên ngắt thấp nhất có thể.
 
-### 6. Quá trình chuyển đổi Ngữ cảnh
-![image](./img/Context_Switch_Animation.png)
-#### quá trình Task out
-Trước khi tác vụ được chuyển đổi, cần lưu ý những điều sau.
-- Các thanh ghi lõi bộ xử lý R0, R1, R2, R3, R12, LR, PC, xPSR (khung ngăn xếp) được lưu tự động vào ngăn xếp riêng của tác vụ bởi trình tự nhập ngắt SysTick của bộ xử lý.
-- Nếu cần Chuyển đổi ngữ cảnh thì bộ đếm thời gian SysTick sẽ chờ Ngoại lệ PendSV và trình xử lý PendSV chạy
-- Các thanh ghi lõi bộ xử lý (R4-R11, R14) phải được lưu thủ công vào bộ nhớ ngăn xếp riêng của tác vụ (Lưu ngữ cảnh)
-- Lưu giá trị đầu ngăn xếp mới (PSP) vào thành viên đầu tiên của TCB
-- Chọn Nhiệm vụ tiềm năng tiếp theo để thực thi trên CPU. Được chăm sóc bởi vTaskSwitchContext() được triển khai trong tasks.c
-1. Exception Entry 
-![image](./img/Exception_Entry.png)
-2. PendSV Handler Entry
-![image](./img/PendSV_Handler_Entry%20.png)
-3. Save core registers 
-![image](./img/Save_core_registers.png)
-4. Save PSP Into TCB 
-![image](./img/Save_PSP_Into_TCB.png)
-
-#### Quá trình Task in
-Vì vậy, tại thời điểm này, chúng ta đã biết tác vụ nào (TCB) nên được
-chuyển đổi trong. Điều đó có nghĩa là TCB của tác vụ có thể chuyển đổi mới có thể được truy cập
-bởi pxCurrentTCB
-- Trước tiên, hãy lấy địa chỉ của đỉnh ngăn xếp. Sao chép giá trị của
-pxTopOfStack vào thanh ghi PSP
-- Đưa tất cả các thanh ghi (R4-R11, R14) (Khôi phục ngữ cảnh)
-- Thoát ngoại lệ: Bây giờ PSP đang trỏ đến địa chỉ bắt đầu của
-khung ngăn xếp sẽ tự động được đưa ra do
-thoát ngoại lệ
-
-1. Load PSP 
-![image](./img/Load_PSP.png)
-2. POP all Core Registers
-![image](./img/POP_all_Core_Registers.png)
-3. Exception Exit 
-![image](./img/Exception_Exit.png)
-
+### 7. Quá trình chuyển đổi Ngữ cảnh
+- Quá trình chuyển đổi ngữ cảnh diễn ra bên trong PendSV exception
+- Lưu các thanh ghi kernel của Task đang được thực thi vào bộ nhớ Stack riêng của tác vụ đó.
+- Chọn Task tiềm năng tiếp theo để thực thi trên CPU.
+- Đưa tất cả các thanh ghi kernel của Task tiếp theo
+- Thoát ngoại lệ PendSV
 ## VIII. cơ chế đồng bộ và chia sẻ dữ liệu
 ### 1. Task Notification
 - Task Notification là một cơ chế rất nhẹ và hiệu quả để giao tiếp hoặc đồng bộ giữa Task-Task hoặc IRS-Task. 
@@ -520,7 +494,7 @@ void vApplicationDaemonTaskStartupHook( void );
     - Nếu tìm thấy, kích hoạt chuyển đổi ngữ cảnh bằng cách đang chờ ngắt PendSV
     - Trình xử lý PendSV đảm nhiệm việc chuyển đổi ra khỏi nhiệm vụ cũ và chuyển đổi vào nhiệm vụ mới
 
-### APIs
+### 2. APIs
 #### 1. xTimerCreate
 ``` C
 /*
